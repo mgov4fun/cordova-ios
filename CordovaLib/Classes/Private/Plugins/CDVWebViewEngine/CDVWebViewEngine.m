@@ -440,6 +440,10 @@ static void * KVOContext = &KVOContext;
     return _engineWebView;
 }
 
+- (void) destroy{
+    self.schemeHandler.viewController = nil;
+}
+
 - (UIView*)webView
 {
     return self.engineWebView;
