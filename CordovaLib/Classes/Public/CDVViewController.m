@@ -19,6 +19,7 @@
 
 @import AVFoundation;
 @import Foundation;
+@import WebKit;
 
 #import <objc/message.h>
 #import <Foundation/NSCharacterSet.h>
@@ -278,14 +279,6 @@
     // Load settings
     [self loadSettings];
 
-    NSString* backupWebStorageType = @"cloud"; // default value
-
-    id backupWebStorage = [self.settings cordovaSettingForKey:@"BackupWebStorage"];
-    if ([backupWebStorage isKindOfClass:[NSString class]]) {
-        backupWebStorageType = backupWebStorage;
-    }
-    [self.settings setCordovaSetting:backupWebStorageType forKey:@"BackupWebStorage"];
-
     // // Instantiate the Launch screen /////////
 
     if (!self.launchView) {
@@ -501,18 +494,36 @@
     webViewBounds.origin = self.view.bounds.origin;
 
     UIView* view = [[UIView alloc] initWithFrame:webViewBounds];
+    view.translatesAutoresizingMaskIntoConstraints = NO;
     [view setAlpha:0];
 
     NSString* launchStoryboardName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UILaunchStoryboardName"];
     if (launchStoryboardName != nil) {
         UIStoryboard* storyboard = [UIStoryboard storyboardWithName:launchStoryboardName bundle:[NSBundle mainBundle]];
         UIViewController* vc = [storyboard instantiateInitialViewController];
+        [self addChildViewController:vc];
 
-        [view addSubview:vc.view];
+        UIView* imgView = vc.view;
+        imgView.translatesAutoresizingMaskIntoConstraints = NO;
+        [view addSubview:imgView];
+
+        [NSLayoutConstraint activateConstraints:@[
+                [NSLayoutConstraint constraintWithItem:imgView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeWidth multiplier:1 constant:0],
+                [NSLayoutConstraint constraintWithItem:imgView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
+                [NSLayoutConstraint constraintWithItem:imgView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
+                [NSLayoutConstraint constraintWithItem:imgView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]
+            ]];
     }
 
     self.launchView = view;
     [self.view addSubview:view];
+
+    [NSLayoutConstraint activateConstraints:@[
+            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1 constant:0],
+            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
+            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
+            [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]
+        ]];
 }
 
 - (void)createGapView
@@ -778,6 +789,10 @@
 
     [UIView animateWithDuration:fadeDuration animations:^{
         [self.launchView setAlpha:(visible ? 1 : 0)];
+
+        if (!visible) {
+            [self.webView becomeFirstResponder];
+        }
     }];
 }
 
