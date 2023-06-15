@@ -37,5 +37,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame;
 - (void)updateWithInfo:(NSDictionary*)info;
+- (void)destroy;
 
 @end
