@@ -319,6 +319,8 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    //cleanup webViewEngine in order to prevent memory leak
+    [self.webViewEngine destroy];
     [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVViewDidDisappearNotification object:nil]];
 }
 

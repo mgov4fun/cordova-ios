@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)initWithFrame:(CGRect)frame configuration:(nullable WKWebViewConfiguration *)configuration;
 
 - (void)updateWithInfo:(NSDictionary*)info;
+- (void)destroy;
 
 NS_ASSUME_NONNULL_END
 
