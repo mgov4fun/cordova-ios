@@ -5,16 +5,15 @@
 # to you under the Apache License, Version 2.0 (the
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
-# 
-# http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#  KIND, either express or implied.  See the License for the
+# KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 require "json"
 
@@ -31,12 +30,13 @@ Pod::Spec.new do |s|
   s.homepage            = "https://github.com/apache/cordova-ios"
   s.license             = { :type => "Apache 2.0", :file => "LICENSE" }
   s.author              = "Apache Software Foundation"
-  s.platform            = :ios, "11.0"
+  s.platform            = :ios, "13.0"
   s.source              = relSource
   s.requires_arc        = true
-  s.frameworks          = 'Foundation'
+  s.frameworks          = ["Foundation", "UIKit", "WebKit"]
   s.source_files        = 'CordovaLib/**/*.{h,m}'
   s.public_header_files = 'CordovaLib/include/**/*.h'
+  s.resource_bundles    = { "Cordova" => ["CordovaLib/PrivacyInfo.xcprivacy"] }
 end
 
 #
